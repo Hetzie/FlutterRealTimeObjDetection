@@ -34,23 +34,18 @@ class  ScanController extends GetxController {
   initCamera() async {
     if (kIsWeb) {
       if (await (Permission.camera.request().isGranted)) {
-        print("Web Cam Permission Granted.");
         cameras = await availableCameras();
-        print("Cameras ---> $cameras");
         cameraController = CameraController(cameras[0], ResolutionPreset.max);
         // window.navigator.mediaDevices!
         //     .getUserMedia({'video': true, 'audio': false})
         //     .asStream().first.then((stream) {
-        //     print("Strea${stream.getVideoTracks()[0].getSettings()}");
         //
         // });
       } else {
-        print("Web Cam Permission not Granted.");
       }
     } else {
       if (await (Permission.camera.request().isGranted)) {
         cameras = await availableCameras();
-        print("Cameras ---> $cameras");
         cameraController = CameraController(cameras[0], ResolutionPreset.max);
         await cameraController.initialize().then((value) {
           cameraController.startImageStream((image) {
@@ -66,7 +61,6 @@ class  ScanController extends GetxController {
         isCameraInitialized(true);
         update();
       } else {
-        print("Camera Permission Denied");
       }
     }
   }
