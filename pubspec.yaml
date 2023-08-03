@@ -40,7 +40,6 @@ dependencies:
   get: ^4.6.5
   image: ^3.3.0
   flutter_tflite: ^1.0.1
-  camera_web: ^0.3.1+4
 
 dev_dependencies:
   flutter_test:

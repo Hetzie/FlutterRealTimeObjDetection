@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_tflite/flutter_tflite.dart';
@@ -6,7 +7,7 @@ import 'package:get/get.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 
-class ScanController extends GetxController {
+class  ScanController extends GetxController {
   @override
   void onInit() {
     super.onInit();
@@ -23,7 +24,7 @@ class ScanController extends GetxController {
   late CameraController cameraController;
   late List<CameraDescription> cameras;
 
-  var x, y, w, h = 0.0;
+  var x, y, w, h, imageHeight = 0.0;
   var label = "";
 
   var isCameraInitialized = false.obs;
@@ -72,40 +73,42 @@ class ScanController extends GetxController {
 
   initTflite() async {
     await Tflite.loadModel(
-        model: "assets/mobilenet_v1.tflite",
-        labels: "assets/labels_mobilenet.txt",
-        isAsset: true,
-        numThreads: 1,
-        useGpuDelegate: false);
+        model: "assets/ssd_mobilenet.tflite",
+        labels: "assets/labels_ssd_mobilenet.txt");
   }
 
   objectDetector(CameraImage image) async {
 
-    var detector = await Tflite.runModelOnFrame(
-        bytesList: image.planes.map((plane) {
-          return plane.bytes;
-        }).toList(),
-        imageHeight: image.height,
-        imageWidth: image.width,
-        imageMean: 127.5,
-        imageStd: 127.5,
-        rotation: 90,
-        threshold: 0.4,
-        asynch: true,
-        numResults: 1);
+    var detector = await Tflite.detectObjectOnFrame(
+      bytesList: image.planes.map((plane) {
+        return plane.bytes;
+      }).toList(),
+      model: "SSDMobileNet",
+      imageHeight: image.height,
+      imageWidth: image.width,
+      imageMean: 127.5,
+      imageStd: 127.5,
+      numResultsPerClass: 3,
+      threshold: 0.4,
+    );
 
     if (detector != null && detector.isNotEmpty) {
       var ourDetectorObject = detector.first;
-      if (ourDetectorObject['confidence'] * 100 > 35) {
-        label = ourDetectorObject['label'].toString();
-        //   h = image.height.toDouble();
-        //   w = image.width.toDouble();
-        // x = ourDetectorObject['rect']['x'];
-        // y = ourDetectorObject['rect']['y'];
-        // label = detector.toString();
-        print(detector);
+      if(ourDetectorObject['confidenceInClass']!=null) {
+        if (ourDetectorObject['confidenceInClass'] * 100 > 50) {
+          label = ourDetectorObject['detectedClass'].toString();
+          imageHeight = image.height.toDouble();
+
+          h = ourDetectorObject['rect']['h'];
+          w = ourDetectorObject['rect']['w'];
+          x = ourDetectorObject['rect']['x'];
+          y = ourDetectorObject['rect']['y'];
+        }
+        update();
+      }else {
+        label = "🤔...";
+        update();
       }
-      update();
     } else {
       label = "🤔...";
       update();

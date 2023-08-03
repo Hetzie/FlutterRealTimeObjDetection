@@ -8,53 +8,41 @@ class CameraView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: GetBuilder<ScanController>(
           init: ScanController(),
           builder: (controller) {
+            double factorX = screenWidth;
+            double factorY = screenHeight / screenHeight * screenWidth;
+
             return controller.isCameraInitialized.value
-                ? Column(
+                ? Stack(
                     children: [
-                      Stack(
-                        children: [
-                          CameraPreview(controller.cameraController),
-                          /*Padding(
-                            padding: const EdgeInsets.all(30.0),
-                            child: Container(
-                              width: 200,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.lightGreenAccent, width: 4.0)),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    color: Colors.white,
-                                    child: Text("${controller.label}"),
-                                  ),
-                                ],
+                      CameraPreview(controller.cameraController),
+                      Positioned(
+                          left: (controller.x ?? 0.2) * factorX,
+                          top: (controller.y ?? 0.2) * (factorY) * 1.6,
+                          width: (controller.w ?? 0.2) * factorX,
+                          height:
+                              (controller.h ?? 0.2) * controller.imageHeight,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                              color: Colors.greenAccent.shade200,
+                              width: 3,
+                            )),
+                            child: Text(
+                              controller.label,
+                              style: TextStyle(
+                                background: Paint()..color = Colors.blue,
+                                color: Colors.white,
+                                fontSize: 15,
                               ),
                             ),
-                          )*/
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                color: Colors.blue.shade200),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                controller.label,
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                            )),
-                      )
+                          ))
                     ],
                   )
                 : const Center(child: Text('Loading Preview...'));

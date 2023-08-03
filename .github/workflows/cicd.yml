@@ -14,10 +14,10 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu' # See 'Supported distributions' for available options
-          java-version: '17'
+          java-version: '1.8'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.10.4'
+          flutter-version: '3.10.6'
       - run: flutter pub get
       - run: flutter test
       - run: flutter build apk --profile
@@ -25,4 +25,4 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "build/app/outputs/flutter-apk/app-profile.apk"
-          token: ${{ secrets.TOKEN }}
+          token: ${{ secrets.CICD }}
