@@ -19,10 +19,9 @@ jobs:
         with:
           flutter-version: '3.10.6'
       - run: flutter pub get
-      - run: flutter test
-      - run: flutter build apk --profile
-      - name: Build profile APK
+      - run: flutter build apk --release
+      - name: Build release APK
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "build/app/outputs/flutter-apk/app-profile.apk"
+          artifacts: "build/app/outputs/flutter-apk/app-release.apk"
           token: ${{ secrets.CICD }}
