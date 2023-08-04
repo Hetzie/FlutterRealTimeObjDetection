@@ -40,7 +40,7 @@ jobs:
         uses: ncipollo/release-action@v1.12.0
         with:
           artifacts: "build/app/outputs/apk/release/app-release.apk"
-          token: ${{ secrets.CICDTOKEN }}
+          token: ${{ secrets.CICD }}
           tag: v1.0.1
 #      - uses: ncipollo/release-action@v1
 #        with:
