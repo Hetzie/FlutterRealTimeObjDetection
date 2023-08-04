@@ -22,7 +22,7 @@ class  ScanController extends GetxController {
   late CameraController cameraController;
   late List<CameraDescription> cameras;
 
-  var x, y, w, h, imageHeight = 0.0;
+  var x = 0.0, y = 0.0, w = 0.0, h = 0.0, imageHeight = 0.0;
   var label = "";
 
   var isCameraInitialized = false.obs;
