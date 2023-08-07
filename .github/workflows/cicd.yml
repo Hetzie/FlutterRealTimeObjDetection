@@ -41,7 +41,7 @@ jobs:
         with:
           artifacts: "build/app/outputs/apk/release/app-release.apk"
           token: ${{ secrets.CICD }}
-          tag: v1.0.3
+          tag: v1.0.4
 
 #      - uses: ncipollo/release-action@v1
 #        with:
